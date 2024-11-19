@@ -33,3 +33,35 @@ select * from author where id not in (2,3,4); -- 1~5까지밖에 데이터가 �
 
 --select 조건에 select문을 입력해도 된다.
 select * form author where id in(select author_id from post);
+
+-- like: 특정문자를 포함하는 데이터를 조회하기 위해 사용하는 키워드이다.
+select * from post where tilte Like "%h"; -- h로 끝나는 title 조회
+select * from post where tilte Like "h%"; -- h로 시작하는 title 조회
+select * from post where tilte Like "%h%"; -- h를 포함하는 title 조회
+
+-- regxp: 정규표현식을 활용한 조회
+select * from post where title regexp '[a-z]'; -- 소문자가 하나라도 포함되어 있는 데이터 조회
+select * from post where title not regexp '[a-z]'; -- 소문자가 하나라도 포함되어 있지않은 데이터 조회
+select * from post where title regexp '[가-힣]'; -- 한글이 하나라도 포함되어 있는 데이터 조회
+
+-- 타입 변환 cast, convert: 숫자-> 날짜, 문자-> 날짜
+select cast(20241119 as date);
+select cast('20241119' as date);
+select convert(20241119, date);
+select convert('20241119', date);
+-- 문자 -> 숫자 변환
+select cast('22' as unsigned);
+
+-- 날짜조회 방법
+-- like패턴, 부등호 활용
+select * from post where created_time like '2024-11%'; -- 문자열처럼
+select * from post where created_time >= '2024-01-01' && created_time < '2025-01-01';
+
+--date_format 활용
+select date_format(created_time, '%Y-%m-%d') from post;
+select date_format(created_time, '%H:%i:%s') from post;
+select * from post where date_format(created_time, "%Y") = '2024';
+select * from post where cast date_format(created_time, '%Y') = 2024 as unsigned = 2024;
+
+-- 오늘날짜 및 시간
+select now();

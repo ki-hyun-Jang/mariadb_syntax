@@ -46,3 +46,47 @@ select a.email, (select count(*) from post where author_id=a.id) from author a;
 
 -- from절 안에 서브쿼리
 select a.name from (select * from author) as a;
+
+-- 집계함수
+--count : 행의 개수를 세지만, null은 count에서 제외
+select count(*) from author;
+select sum(price) form post;
+select avg(price) from post;
+-- 소수점 첫 번째 자리에서 반올림해서 소수점을 없앰
+select round(price,0) from post;
+select round(avg(price),0) from post;
+
+-- group by: 그룹화된 데이터를 하나의 행(row)처럼 취급
+-- author_id로 그룹핑을 했으면, 그 외의 컬럼은 조회하는 것은 적철하지 않음.
+select author_id from group by author_id;
+-- group by와 집계함수
+-- 아래 쿼리에서 *의 의미는 그룹화된 데이터내에서의 개수를 말한다.
+select author_id,count(*) from post group by author_id;
+select author_id,count(*),sum(price) from post group by author_id;
+
+-- author의 email과 author별로 본인이 쓴 글의 개수를 출력
+select a.email, (select count(*) from post where author_id=a.id) from author a;
+-- join과 group by, 집계함수 활용한 글의 개수 출력
+select a.id, a.email, count(p.author_id)
+from author a left join post p on a.id=p.author_id
+group by a.id;
+
+-- where와 group by
+-- 연도별로 post 글의 개수 출력, 연도가 null인 값은 제외
+select date_format(created_time,'%Y') as year, count(*)
+from post
+where created_time is not null
+group by year;
+
+-- having: group by를 통해 나온 집계값에 대한 조건
+-- 글을 2개 이상 쓴사람에 대한 정보조회
+select author_id from post group by author_id having count(*)>=2
+
+select author_id, count(*) as cnt 
+from post 
+group by author_id
+having cnt>=2
+
+-- 다중 열 group by
+-- post에서 사용자마다 작성자가 만든 제목에 개수를 출력하시오.
+select author_id, title, count(*) from post group by author_id, title;

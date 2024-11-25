@@ -15,7 +15,7 @@ sudo apt-get install mariadb-server
 sudo systemctl start mariadb
 
 # mariadb 접속
-mariadb -u root -p
+sudo mariadb -u root -p
 create database board;
 
 # git설치
